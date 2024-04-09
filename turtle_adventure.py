@@ -458,7 +458,7 @@ class FencingEnemy(Enemy):
     def delete(self) -> None:
         pass
 
-class SieageEnemy(Enemy):
+class BlockerEnemy(Enemy):
 
     def __init__(self,
                  game: "TurtleAdventureGame",
@@ -466,7 +466,7 @@ class SieageEnemy(Enemy):
                  color: str):
         super().__init__(game, size, color)
         self.__id = None
-        self.speed = 2
+        self.speed = 7
         self.player_x = self.game.player.x
         self.player_y = self.game.player.y
         self.off_from_player= 60
@@ -500,25 +500,25 @@ class SieageEnemy(Enemy):
         self.y -= self.speed
 
         if self.y < (self.player_y - self.off_from_player):
-            self.move = self.right
+            self.move = self.down
 
     def right(self):
         self.x += self.speed
 
         if self.x > (self.player_x + self.off_from_player):
-            self.move = self.down
+            self.move = self.left
 
     def down(self):
         self.y += self.speed
 
         if self.y > (self.player_y + self.off_from_player):
-            self.move = self.left
+            self.move = self.up
 
     def left(self):
         self.x -= self.speed
 
         if self.x < (self.player_x - self.off_from_player):
-            self.move = self.up
+            self.move = self.right
 
     def render(self) -> None:
         self.canvas.coords(self.__id,
@@ -576,7 +576,7 @@ class EnemyGenerator:
         new_enemy.y = 100
         self.game.add_element(new_enemy)
 
-        self.game.canvas.after(1000, self.create_enemy)
+        self.game.canvas.after(500, self.create_enemy)
 
 
 class TurtleAdventureGame(Game): # pylint: disable=too-many-ancestors
@@ -616,7 +616,7 @@ class TurtleAdventureGame(Game): # pylint: disable=too-many-ancestors
         self.add_enemy_factory(RandomWalkEnemy, 'red')
         self.add_enemy_factory(ChasingEnemy, 'green')
         self.add_enemy_factory(FencingEnemy, 'blue')
-        self.add_enemy_factory(SieageEnemy, 'yellow')
+        self.add_enemy_factory(BlockerEnemy, 'yellow')
 
         self.player.x = 50
         self.player.y = self.screen_height//2
